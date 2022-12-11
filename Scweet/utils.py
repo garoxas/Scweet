@@ -421,4 +421,6 @@ def check_exists_by_xpath(xpath, driver):
 def dowload_images(urls, save_dir):
     for i, url_v in enumerate(urls):
         for j, url in enumerate(url_v):
-            urllib.request.urlretrieve(url, save_dir + '/' + str(i + 1) + '_' + str(j + 1) + ".jpg")
+            match = re.search('/pbs.twimg.com/media/([^?]+)\?.*format=([a-z]+)', url)
+            if match:
+                urllib.request.urlretrieve(re.sub(r'name=[a-z0-9]+', 'name=orig', url), save_dir + '/' + match.group(1) + "." + match.group(2))

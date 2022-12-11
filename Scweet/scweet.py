@@ -12,7 +12,7 @@ from .utils import init_driver, get_last_date_from_csv, log_search_page, keep_sc
 
 def scrape(since, until=None, words=None, to_account=None, from_account=None, mention_account=None, interval=5, lang=None,
           headless=True, limit=float("inf"), display_type="Top", resume=False, proxy=None, hashtag=None, 
-          show_images=False, save_images=False, save_dir="outputs", filter_replies=False, proximity=False, 
+          show_images=False, save_images=False, save_dir="outputs", save_images_dir="images", filter_replies=False, proximity=False, 
           geocode=None, minreplies=None, minlikes=None, minretweets=None):
     """
     scrape data from twitter using requests, starting from <since> until <until>. The program make a search between each <since> and <until_local>
@@ -131,7 +131,6 @@ def scrape(since, until=None, words=None, to_account=None, from_account=None, me
     # save images
     if save_images==True:
         print("Saving images ...")
-        save_images_dir = "images"
         if not os.path.exists(save_images_dir):
             os.makedirs(save_images_dir)
 
@@ -184,6 +183,12 @@ if __name__ == '__main__':
                         help='Min. number of likes to the tweet', default=None)
     parser.add_argument('--minretweets', type=int,
                         help='Min. number of retweets to the tweet', default=None)
+    parser.add_argument('--save_images', type=bool,
+                        help='Save images. True or False', default=False)
+    parser.add_argument('--save_dir', type=str,
+                        help='Save dir', default="outputs")
+    parser.add_argument('--save_images_dir', type=str,
+                        help='Save images dir', default="images")
                             
 
     args = parser.parse_args()
@@ -207,8 +212,11 @@ if __name__ == '__main__':
     minreplies = args.minreplies
     minlikes = args.minlikes
     minretweets = args.minlikes
+    save_images = args.save_images
+    save_dir = args.save_dir
+    save_images_dir = args.save_images_dir
 
     data = scrape(since=since, until=until, words=words, to_account=to_account, from_account=from_account, mention_account=mention_account,
                 hashtag=hashtag, interval=interval, lang=lang, headless=headless, limit=limit,
-                display_type=display_type, resume=resume, proxy=proxy, filter_replies=False, proximity=proximity,
+                display_type=display_type, resume=resume, proxy=proxy, save_images=save_images, save_dir=save_dir, save_images_dir=save_images_dir, filter_replies=False, proximity=proximity,
                 geocode=geocode, minreplies=minreplies, minlikes=minlikes, minretweets=minretweets)
